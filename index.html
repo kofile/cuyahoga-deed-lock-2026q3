@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Deed Lock — Phase 1 Walkthrough · Cuyahoga County</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple-900: #2d1b4e; --purple-700: #4a2d7a; --purple-600: #5e3a9c; --purple-500: #7548c4; --purple-100: #ede4fa; --purple-50:  #f7f2fc;
+    --blue-700:   #1e4d8b; --blue-600:   #2b66ad; --blue-100:   #dde8f4;
+    --ink: #1a1d29; --ink-2: #3d4252; --ink-3: #5c6271; --ink-mute: #7c8395;
+    --paper: #ffffff; --paper-2: #faf9fc; --line: #e2dfe9; --line-soft: #ededf2;
+    --ok: #1f6b3d; --ok-bg: #e6f2eb; --warn: #92500c; --warn-bg: #fdf0dd; --danger: #99311e; --danger-bg: #fbe4de;
+    --shadow-sm: 0 1px 2px rgba(45, 27, 78, 0.06); --shadow-md: 0 2px 8px rgba(45, 27, 78, 0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--paper-2); color: var(--ink); font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .container { max-width: 1180px; margin: 0 auto; padding: 32px 32px 80px; }
+  .doc-header { border-bottom: 1px solid var(--line); padding-bottom: 24px; margin-bottom: 28px; display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end; }
+  .doc-title h1 { font-weight: 700; font-size: 30px; line-height: 1.15; letter-spacing: -0.015em; color: var(--ink); }
+  .doc-title .eyebrow { font-size: 12px; font-weight: 600; color: var(--purple-600); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .doc-title .subtitle { font-size: 14px; color: var(--ink-3); margin-top: 6px; }
+  .doc-meta { font-size: 12px; color: var(--ink-3); text-align: right; line-height: 1.7; }
+  .doc-meta strong { color: var(--ink); font-weight: 600; }
+  .intro { background: var(--purple-50); border-left: 3px solid var(--purple-600); padding: 18px 22px; margin-bottom: 28px; font-size: 14.5px; color: var(--ink-2); border-radius: 2px; }
+  .intro strong { color: var(--ink); }
+  .reframe-callout { background: linear-gradient(180deg, var(--purple-50) 0%, var(--paper) 100%); border: 1px solid var(--purple-500); padding: 16px 22px; margin-bottom: 28px; border-radius: 4px; font-size: 14px; color: var(--ink-2); }
+  .reframe-callout .label { font-size: 10.5px; font-weight: 700; color: var(--purple-700); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .reframe-callout strong { color: var(--ink); }
+  .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--line); margin-bottom: 32px; flex-wrap: wrap; position: sticky; top: 0; background: var(--paper-2); z-index: 10; padding-top: 4px; }
+  .tab { background: none; border: none; border-bottom: 3px solid transparent; padding: 14px 16px 12px; cursor: pointer; text-align: left; font-family: inherit; transition: all 0.15s ease; margin-bottom: -2px; color: var(--ink-3); }
+  .tab:hover { background: var(--paper); color: var(--ink); }
+  .tab.active { border-bottom-color: var(--purple-600); background: var(--paper); color: var(--ink); }
+  .tab-eyebrow { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-mute); margin-bottom: 3px; }
+  .tab.active .tab-eyebrow { color: var(--purple-600); }
+  .tab-title { font-weight: 600; font-size: 14.5px; line-height: 1.2; }
+  .view { display: none; animation: fadeIn 0.2s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: translateY(0); } }
+  .view-header { margin-bottom: 28px; }
+  .view-header h2 { font-weight: 700; font-size: 24px; letter-spacing: -0.01em; color: var(--ink); }
+  .view-header .lede { font-size: 14.5px; color: var(--ink-2); margin-top: 6px; max-width: 76ch; line-height: 1.55; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 12px; letter-spacing: 0.02em; border: 1px solid; }
+  .badge.in { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+  .badge.out { background: var(--paper-2); color: var(--ink-mute); border-color: var(--line); }
+  .badge.warn { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+  .badge.danger { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
+  .badge.purple { background: var(--purple-100); color: var(--purple-700); border-color: var(--purple-700); }
+  .swimlane-wrap { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; overflow: auto; box-shadow: var(--shadow-sm); margin-bottom: 24px; }
+  .swimlane { width: 100%; min-width: 980px; border-collapse: collapse; font-size: 13px; }
+  .swimlane thead th { background: var(--purple-50); color: var(--purple-700); text-align: left; padding: 12px 14px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; border-bottom: 2px solid var(--purple-600); vertical-align: bottom; }
+  .swimlane thead th:first-child { background: var(--ink); color: var(--paper); border-bottom-color: var(--ink); }
+  .swimlane thead th .phase-time { display: block; font-size: 10px; font-weight: 500; color: var(--ink-mute); text-transform: none; letter-spacing: 0; margin-top: 2px; }
+  .swimlane td { padding: 14px; border-bottom: 1px solid var(--line-soft); border-right: 1px solid var(--line-soft); vertical-align: top; line-height: 1.5; color: var(--ink-2); }
+  .swimlane td:first-child { background: var(--paper-2); font-weight: 600; color: var(--ink); width: 140px; border-right: 2px solid var(--line); }
+  .swimlane td:first-child .lane-tag { display: block; font-size: 10.5px; font-weight: 500; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+  .swimlane tr:last-child td { border-bottom: none; }
+  .step-marker { display: inline-block; background: var(--purple-600); color: var(--paper); font-weight: 600; font-size: 11px; padding: 2px 7px; border-radius: 10px; margin-right: 5px; }
+  .step-marker.system { background: var(--blue-700); }
+  .step-title { font-weight: 600; color: var(--ink); margin-right: 4px; }
+  .swimlane td .empty-text { color: var(--ink-mute); font-style: italic; }
+  .legend { background: var(--purple-50); border-left: 3px solid var(--purple-500); padding: 14px 18px; margin-top: 16px; font-size: 13.5px; color: var(--ink-2); border-radius: 0 4px 4px 0; }
+  .legend strong { color: var(--ink); }
+  .decision-callout { background: var(--ok-bg); border-left: 3px solid var(--ok); padding: 12px 16px; margin: 12px 0 20px; font-size: 13.5px; color: var(--ink-2); border-radius: 0 4px 4px 0; }
+  .decision-callout strong { color: var(--ink); }
+  .step { display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding: 22px 0; border-bottom: 1px solid var(--line-soft); }
+  .step:last-child { border-bottom: none; }
+  .step-num { font-weight: 700; font-size: 28px; color: var(--purple-600); line-height: 1; text-align: right; border-right: 2px solid var(--purple-100); padding-right: 16px; padding-top: 4px; }
+  .step-body h3 { font-weight: 600; font-size: 17px; margin-bottom: 6px; color: var(--ink); }
+  .step-body .actor { font-size: 11px; font-weight: 600; color: var(--purple-600); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .step-body p { color: var(--ink-2); margin-bottom: 10px; }
+  .step-body ul { list-style: none; padding: 0; color: var(--ink-2); }
+  .step-body ul li { padding: 4px 0 4px 18px; position: relative; font-size: 14px; line-height: 1.5; }
+  .step-body ul li::before { content: "→"; position: absolute; left: 0; color: var(--purple-500); font-weight: 600; }
+  .phone { width: 240px; background: var(--ink); border-radius: 18px; padding: 7px; margin: 12px 0; box-shadow: var(--shadow-md); }
+  .phone-screen { background: #f0f1f5; border-radius: 12px; padding: 14px 12px 18px; min-height: 200px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+  .phone-header { text-align: center; font-size: 10px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+  .phone-from { font-weight: 600; color: var(--ink); font-size: 11px; text-transform: none; letter-spacing: 0; display: block; margin-top: 3px; }
+  .sms-bubble { background: var(--paper); border-radius: 14px 14px 14px 4px; padding: 10px 12px; font-size: 12.5px; line-height: 1.45; color: var(--ink); margin-bottom: 6px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); max-width: 90%; }
+  .sms-bubble.outgoing { background: var(--blue-600); color: var(--paper); border-radius: 14px 14px 4px 14px; margin-left: auto; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+  .sms-time { font-size: 9.5px; color: var(--ink-mute); text-align: center; margin: 6px 0; }
+  .sms-otp { font-family: 'JetBrains Mono', monospace; font-weight: 600; color: var(--purple-700); }
+  .clerk-screen { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; box-shadow: var(--shadow-sm); margin: 12px 0; }
+  .clerk-screen-bar { background: var(--blue-700); color: var(--paper); padding: 9px 14px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; display: flex; justify-content: space-between; }
+  .clerk-banner { background: var(--warn-bg); border-left: 3px solid var(--warn); padding: 10px 14px; font-size: 12.5px; color: var(--warn); font-weight: 500; }
+  .clerk-banner strong { display: block; margin-bottom: 3px; font-size: 13px; }
+  .clerk-screen-body { padding: 14px; }
+  .clerk-field { display: grid; grid-template-columns: 130px 1fr; padding: 6px 0; border-bottom: 1px dotted var(--line-soft); font-size: 12.5px; }
+  .clerk-field:last-child { border-bottom: none; }
+  .clerk-field-label { color: var(--ink-3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+  .clerk-field-value { color: var(--ink); font-weight: 500; }
+  .clerk-actions { display: flex; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line-soft); }
+  .btn-mock { font-size: 11px; padding: 6px 11px; border: 1px solid var(--line); background: var(--paper); border-radius: 3px; color: var(--ink-3); font-family: inherit; font-weight: 500; }
+  .btn-mock.primary { background: var(--blue-600); color: var(--paper); border-color: var(--blue-600); }
+  .btn-mock.disabled { opacity: 0.45; }
+  .queue { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; font-size: 12.5px; box-shadow: var(--shadow-sm); margin-bottom: 16px; }
+  .queue-head { background: var(--danger); color: var(--paper); padding: 9px 14px; font-size: 10.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .queue-row { display: grid; grid-template-columns: 80px 1fr 150px 90px; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--line-soft); align-items: center; }
+  .queue-row.header { background: var(--paper-2); font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-mute); }
+  .queue-row:last-child { border-bottom: none; }
+  .queue-row .order { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; }
+  .queue-row .age { color: var(--ink-3); font-size: 11.5px; }
+  .flag-pill { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 3px; letter-spacing: 0.02em; }
+  .flag-fraud { background: var(--danger-bg); color: var(--danger); }
+  .flag-retries { background: var(--warn-bg); color: var(--warn); }
+  .flag-nonresp { background: var(--purple-100); color: var(--purple-700); }
+  .arch-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 8px 0 24px; }
+  .arch-card { background: var(--paper); border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px; box-shadow: var(--shadow-sm); }
+  .arch-card .owner { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--purple-600); margin-bottom: 5px; }
+  .arch-card h4 { font-weight: 600; font-size: 16px; color: var(--ink); margin-bottom: 4px; }
+  .arch-card .role { font-size: 12.5px; color: var(--ink-3); margin-bottom: 12px; font-style: italic; }
+  .arch-card ul { list-style: none; }
+  .arch-card ul li { padding: 4px 0 4px 14px; position: relative; font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+  .arch-card ul li::before { content: "·"; position: absolute; left: 4px; color: var(--purple-500); font-weight: 700; }
+  .framework-section { background: var(--purple-50); border-left: 3px solid var(--purple-600); padding: 18px 22px; margin: 12px 0 24px; border-radius: 0 4px 4px 0; }
+  .framework-section h3 { font-weight: 600; font-size: 17px; color: var(--ink); margin-bottom: 8px; }
+  .framework-section .label { font-size: 10.5px; font-weight: 700; color: var(--purple-700); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .framework-section p { font-size: 13.5px; color: var(--ink-2); margin-bottom: 10px; line-height: 1.5; }
+  .framework-section ul { list-style: none; padding: 0; }
+  .framework-section ul li { padding: 3px 0 3px 16px; position: relative; font-size: 13px; color: var(--ink-2); line-height: 1.45; }
+  .framework-section ul li::before { content: "·"; position: absolute; left: 4px; color: var(--purple-600); font-weight: 700; }
+  table.data { width: 100%; border-collapse: collapse; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; overflow: hidden; box-shadow: var(--shadow-sm); margin: 12px 0 16px; font-size: 13px; }
+  table.data th { background: var(--ink); color: var(--paper); text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; }
+  table.data td { padding: 10px 14px; border-bottom: 1px solid var(--line-soft); color: var(--ink-2); vertical-align: top; }
+  table.data tr:last-child td { border-bottom: none; }
+  table.data td:first-child { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink); font-weight: 500; }
+  table.data.questions td:first-child { font-family: inherit; font-size: 13px; font-weight: 600; color: var(--ink); width: 40px; text-align: center; }
+  table.data.questions td:nth-child(2) { font-family: inherit; font-size: 13px; color: var(--ink-2); }
+  .status-pill { display: inline-block; font-size: 10.5px; font-weight: 600; padding: 3px 8px; border-radius: 3px; letter-spacing: 0.02em; text-transform: uppercase; border: 1px solid transparent; }
+  .status-pill.done { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+  .status-pill.dev { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+  .status-pill.hold { background: var(--purple-100); color: var(--purple-700); border-color: var(--purple-700); }
+  .status-pill.new { background: var(--danger-bg); color: var(--danger); border-color: var(--danger); }
+  .status-pill.decision { background: var(--blue-100); color: var(--blue-700); border-color: var(--blue-700); }
+  .status-pill.exists { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+  .status-pill.risk { background: var(--warn-bg); color: var(--warn); border-color: var(--warn); }
+  .status-pill.resolved { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+  .ticket-link { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--blue-700); }
+  .open-items { background: var(--warn-bg); border-left: 3px solid var(--warn); padding: 18px 22px; margin-top: 24px; border-radius: 0 4px 4px 0; }
+  .open-items h3 { font-weight: 600; font-size: 16px; color: var(--ink); margin-bottom: 10px; }
+  .open-items ol { list-style: none; counter-reset: openitem; padding: 0; }
+  .open-items li { counter-increment: openitem; padding: 8px 0 8px 32px; position: relative; border-bottom: 1px dotted var(--line); font-size: 13.5px; color: var(--ink-2); }
+  .open-items li:last-child { border-bottom: none; }
+  .open-items li::before { content: counter(openitem, decimal-leading-zero); position: absolute; left: 0; font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--warn); font-weight: 600; top: 9px; }
+  .open-items .owner { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-mute); margin-left: 6px; }
+  .open-items strong { color: var(--ink); }
+  .section-title { font-weight: 600; font-size: 16px; color: var(--ink); margin: 28px 0 8px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .footer-note { margin-top: 60px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 11.5px; letter-spacing: 0.06em; color: var(--ink-mute); display: flex; justify-content: space-between; text-transform: uppercase; font-weight: 500; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; background: var(--purple-50); color: var(--purple-700); padding: 1px 5px; border-radius: 2px; font-weight: 500; }
+  .question-group { margin-top: 24px; }
+  .question-group h3 { font-weight: 600; font-size: 16px; color: var(--ink); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .process-note { background: var(--blue-100); border-left: 3px solid var(--blue-700); padding: 14px 18px; margin-top: 24px; border-radius: 0 4px 4px 0; font-size: 13.5px; color: var(--ink-2); }
+  .process-note strong { color: var(--ink); }
+  .sidenote-card { background: var(--paper); border: 1px solid var(--line); border-left: 3px solid var(--purple-500); border-radius: 4px; padding: 20px 22px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+  .sidenote-card .label { font-size: 10.5px; font-weight: 700; color: var(--purple-700); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .sidenote-card h3 { font-weight: 600; font-size: 17px; color: var(--ink); margin-bottom: 10px; }
+  .sidenote-card p { font-size: 13.5px; color: var(--ink-2); margin-bottom: 10px; line-height: 1.55; }
+  .sidenote-card .owner-line { font-size: 12px; color: var(--ink-3); margin-top: 12px; padding-top: 10px; border-top: 1px dotted var(--line); }
+  .sidenote-card .owner-line strong { color: var(--ink); }
+  .sidenote-card ul { list-style: none; padding: 0; margin: 6px 0 10px; }
+  .sidenote-card ul li { padding: 3px 0 3px 16px; position: relative; font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+  .sidenote-card ul li::before { content: "·"; position: absolute; left: 4px; color: var(--purple-500); font-weight: 700; }
+  @media (max-width: 900px) {
+    .container { padding: 20px 16px 60px; }
+    .arch-grid { grid-template-columns: 1fr; }
+    .doc-header { grid-template-columns: 1fr; }
+    .doc-meta { text-align: left; }
+    .tab { padding: 10px 12px; }
+    .queue-row { grid-template-columns: 1fr; gap: 4px; }
+    .queue-row.header { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header class="doc-header">
+    <div class="doc-title">
+      <div class="eyebrow">Q2 2026 · Phase 1</div>
+      <h1>Deed Lock — Cuyahoga County</h1>
+      <div class="subtitle">Walkthrough for Records, Platform &amp; Cuyahoga teams · demo not memo</div>
+    </div>
+    <div class="doc-meta">
+      <strong>Draft v4 · May 6, 2026</strong><br/>
+      Updated post-Cuyahoga touchpoint<br/>
+      Owners: Beeson · Balfantz · Majda · Miller
+    </div>
+  </header>
+
+  <div class="intro">
+    <strong>What this is.</strong> Cuyahoga citizens enroll a parcel ID at the recorder's counter. Any transfer document submitted against that parcel locks the order at recorder intake and triggers a single SMS — branded as Cuyahoga County, not Neumo — to the citizen with a one-time code. The citizen replies <code>CONFIRM</code> or <code>DISPUTE</code>. The order doesn't move until the citizen acts or a supervisor manually resolves it. Claims are valid 12 months and require renewal (renewal flow is Phase 2).
+  </div>
+
+  <div class="reframe-callout">
+    <div class="label">Architectural reframe — April 29 review</div>
+    The upfront enrollment is <strong>NOT Deed-Lock-specific</strong>. We are building a generalized <strong>Enrollment Framework</strong> that will support multiple programs: Deed Lock (Cuyahoga, Q2), Protected Individuals (Summit County), Safe at Home, and others. <strong>Deed Lock is the first program riding on the framework.</strong>
+  </div>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-view="full" role="tab"><div class="tab-eyebrow">Start here</div><div class="tab-title">Full Flow</div></button>
+    <button class="tab" data-view="citizen" role="tab"><div class="tab-eyebrow">Persona 01</div><div class="tab-title">Citizen</div></button>
+    <button class="tab" data-view="clerk" role="tab"><div class="tab-eyebrow">Persona 02</div><div class="tab-title">Records Clerk</div></button>
+    <button class="tab" data-view="supervisor" role="tab"><div class="tab-eyebrow">Persona 03</div><div class="tab-title">Supervisor</div></button>
+    <button class="tab" data-view="system" role="tab"><div class="tab-eyebrow">Reference</div><div class="tab-title">System &amp; Specs</div></button>
+    <button class="tab" data-view="questions" role="tab"><div class="tab-eyebrow">Eng Review</div><div class="tab-title">Open Questions</div></button>
+    <button class="tab" data-view="sidenotes" role="tab"><div class="tab-eyebrow">Strategic</div><div class="tab-title">Sidenotes</div></button>
+  </nav>
+
+  <section class="view active" data-pane="full">
+    <div class="view-header">
+      <h2>End-to-end process flow</h2>
+      <p class="lede">Four lanes — three people and one system — moving through four phases of time. Numbered markers show how an action in one lane fires the next.</p>
+    </div>
+    <div class="decision-callout">
+      <strong>✅ Architectural decision (May 6):</strong> The parcel-match trigger fires at <strong>order intake / processing in the recorder's office.</strong> Cuyahoga is a combined recorder/auditor office, but transfer documents enter the workflow at the recorder side — that's where the lock applies.
+    </div>
+    <div class="swimlane-wrap">
+      <table class="swimlane">
+        <thead>
+          <tr>
+            <th>Lane</th>
+            <th>Phase 1 — Enrollment <span class="phase-time">Day 0, in person</span></th>
+            <th>Phase 2 — Order Entry <span class="phase-time">Weeks/months later</span></th>
+            <th>Phase 3 — Citizen Response <span class="phase-time">Within 24 hr</span></th>
+            <th>Phase 4 — Resolution <span class="phase-time">Manual or automatic</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Citizen<span class="lane-tag">Property owner</span></td>
+            <td><span class="step-marker">①</span><span class="step-title">Walks in</span><div>Brings ID + proof of ownership. Verifies mobile via OTP read-back through Platform's React component.</div></td>
+            <td><span class="empty-text">— going about life —</span></td>
+            <td><span class="step-marker">④</span><span class="step-title">Receives SMS alert</span><div>Single message branded as Cuyahoga County with parcel, address, embedded OTP.</div><div style="margin-top:6px"><span class="step-marker">⑤</span>Replies <code>CONFIRM [code]</code> or <code>DISPUTE [code]</code> — last reply wins, max 3 attempts.</div></td>
+            <td><span class="empty-text">(done unless DISPUTE)</span></td>
+          </tr>
+          <tr>
+            <td>Records Clerk<span class="lane-tag">Counter staff</span></td>
+            <td><span class="step-marker">②</span><span class="step-title">Enrolls citizen into framework</span><div>Validates ID, captures claimant name, parcel ID, mobile. Activates 12-month claim. <em>DLN not stored.</em></div></td>
+            <td><span class="step-marker">③</span><span class="step-title">Processes order at intake</span><div>Transfer document arrives at recorder's intake. CR auto-checks parcel IDs. On match, order suspends with elevated permissioning.</div></td>
+            <td><span class="empty-text">— waits — clerk cannot unsuspend —</span></td>
+            <td><span class="step-marker">⑥</span><span class="step-title">Finalizes or hands off</span><div>On <span class="badge in">CONFIRM</span> → unlock + record. On <span class="badge danger">DISPUTE</span> → hands off to supervisor.</div></td>
+          </tr>
+          <tr>
+            <td>System<span class="lane-tag">Spider + CR + Platform</span></td>
+            <td><span class="step-marker system">Ⓐ</span><span class="step-title">Enrollment write</span><div>1. Spider holds program registry<br/>2. Platform React component verifies mobile<br/>3. CR writes Claimed Property + 12mo expiry<br/>4. Confirmation SMS sent (Cuyahoga branded)</div></td>
+            <td><span class="step-marker system">Ⓑ</span><span class="step-title">Match + lock at recorder intake</span><div>1. CR matches parcel IDs at order processing<br/>2. Triggers extended suspend (with permissioning)<br/>3. CR generates OTP<br/>4. Platform sends SMS via 10DLC</div></td>
+            <td><span class="step-marker system">Ⓒ</span><span class="step-title">Reply parsing</span><div>1. Platform passes full body uncensored to CR<br/>2. CR parses CONFIRM/DISPUTE + OTP<br/>3. Last reply wins; 24-hr window with 12-hr reminder<br/>4. Max 3 attempts → force-lock</div></td>
+            <td><span class="step-marker system">Ⓓ</span><span class="step-title">Routes outcomes</span><div>CONFIRM → unlock + notify clerk. DISPUTE / max attempts / 24-hr no-reply → supervisor queue.</div></td>
+          </tr>
+          <tr>
+            <td>Supervisor<span class="lane-tag">Override authority</span></td>
+            <td><span class="empty-text">(none)</span></td>
+            <td><span class="empty-text">(none)</span></td>
+            <td><span class="empty-text">— monitors queue —</span></td>
+            <td><span class="step-marker">⑦</span><span class="step-title">Resolves escalation</span><div>Reviews flag, follows Cuyahoga procedures, manually unlocks / holds / rejects. <strong>Only role with override authority.</strong> Citizen-death scenarios resolved here case-by-case.</div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <strong>How to read the handoffs:</strong> ① → Ⓐ — clerk enrollment fires the system to verify mobile, write the claim, and send confirmation SMS. Ⓑ → ④ — system match at recorder intake fires the citizen alert. ⑤ → Ⓒ — citizen reply triggers parsing, which either unlocks the clerk's lane (⑥) or escalates to the supervisor (⑦).
+    </div>
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px;">
+      <span class="badge in">In scope · Counter enrollment</span>
+      <span class="badge in">In scope · 2FA via SMS (Cuyahoga branded)</span>
+      <span class="badge in">In scope · Supervisor queue</span>
+      <span class="badge in">In scope · 12mo claim expiry</span>
+      <span class="badge in">In scope · Match at recorder intake</span>
+      <span class="badge out">Out · Online enrollment</span>
+      <span class="badge out">Out · LLC / commercial</span>
+      <span class="badge out">Out · Email reminders / renewal flow (Phase 2)</span>
+    </div>
+  </section>
+
+  <section class="view" data-pane="citizen">
+    <div class="view-header">
+      <h2>The citizen's journey</h2>
+      <p class="lede">A property owner walks into the recorder's office to enroll, then later receives an SMS the moment any transfer document is filed against their parcel.</p>
+    </div>
+    <div class="step"><div class="step-num">01</div><div class="step-body"><div class="actor">Citizen → Counter</div><h3>Walk in to enroll</h3><p>Visits the Cuyahoga recorder's office in person with government-issued ID and proof of ownership.</p><ul><li>Counter-only — no online enrollment in Phase 1</li><li>Individual ownership only — LLC / commercial property excluded</li><li>Cuyahoga owns identity verification — Neumo doesn't validate ID</li><li><strong>Claim is valid for 12 months</strong> — citizen must renew to maintain protection</li></ul></div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body"><div class="actor">Citizen → Clerk</div><h3>Verify mobile via Platform's React component</h3><p>Clerk enters the citizen's mobile into the enrollment screen. The Platform's pre-built React component sends a verification OTP — citizen reads it aloud, clerk types it back to confirm.</p><ul><li>AWS requires this verification before any future SMS can send to that number — not optional</li><li>Becomes the 2FA channel for all future transfer alerts on this parcel</li></ul></div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body"><div class="actor">System → Citizen</div><h3>Enrollment confirmation SMS — Cuyahoga branded</h3><p>On activation, the citizen receives a confirmation SMS naming their property and the 12-month claim window.</p><div class="phone"><div class="phone-screen"><div class="phone-header">SMS<span class="phone-from">Cuyahoga County</span></div><div class="sms-bubble">Cuyahoga County: Your property at 1247 Elm Ave (Parcel 542-19-008) is now enrolled in Deed Lock protection. Valid for 12 months. Reply STOP at any time to unsubscribe.</div><div class="sms-time">Today · 10:42 AM</div></div></div><div class="decision-callout" style="margin-top:8px"><strong>Branding (May 6):</strong> SMS sender ID is Cuyahoga County, NOT Neumo. Confirmed by Brian — citizens must recognize the source as their county.</div></div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body"><div class="actor">System → Citizen (later)</div><h3>Transfer alert lands</h3><p>Weeks or months later, a transfer document is submitted against this parcel. Within seconds the citizen receives a single SMS — address, parcel ID, embedded OTP.</p><div class="phone"><div class="phone-screen"><div class="phone-header">SMS<span class="phone-from">Cuyahoga County</span></div><div class="sms-bubble">Cuyahoga County Deed Lock: A transfer document was submitted for 1247 Elm Ave (Parcel 542-19-008). Reply CONFIRM <span class="sms-otp">482917</span> to authorize or DISPUTE <span class="sms-otp">482917</span> to flag as fraud. Expires in 24 hrs.</div><div class="sms-time">Today · 2:13 PM</div></div></div><ul><li>Single SMS — within 160 GSM characters (one segment)</li><li>Order is held in suspended state until reply or 24-hr timeout</li></ul></div></div>
+    <div class="step"><div class="step-num">05</div><div class="step-body"><div class="actor">Citizen → System</div><h3>Reply: CONFIRM or DISPUTE — last reply wins, max 3 attempts</h3><p>Citizen replies <code>CONFIRM 482917</code> to authorize or <code>DISPUTE 482917</code> to flag fraud. Per May 6 Cuyahoga confirmation: citizen can change their mind up to <strong>3 total attempts</strong> — the last valid reply within the limit is the winner.</p><div class="phone"><div class="phone-screen"><div class="phone-header">SMS<span class="phone-from">Cuyahoga County</span></div><div class="sms-bubble">Cuyahoga County Deed Lock: A transfer document was submitted for 1247 Elm Ave...</div><div class="sms-bubble outgoing">DISPUTE 482917</div><div class="sms-time">2:14 PM</div><div class="sms-bubble">Received. This transfer has been flagged for review by a Cuyahoga County supervisor.</div></div></div><ul><li><strong>CONFIRM + valid code</strong> → order unlocks; clerk notified; recording proceeds</li><li><strong>DISPUTE + valid code</strong> → order escalated to supervisor with fraud flag</li><li><strong>3 attempts exceeded</strong> → order force-locked; routed to supervisor regardless of intent</li><li><strong>Invalid code</strong> → ignored; original OTP remains active</li></ul></div></div>
+    <div class="step"><div class="step-num">06</div><div class="step-body"><div class="actor">Edge cases</div><h3>What if the citizen doesn't reply?</h3><ul><li><strong>12 hours of silence</strong> → reminder SMS with the same OTP</li><li><strong>24 hours of silence</strong> → escalates to supervisor with "Citizen non-responsive" flag; order remains held</li></ul></div></div>
+    <div class="step"><div class="step-num">07</div><div class="step-body"><div class="actor">Edge cases</div><h3>What if the citizen has STOP'd from SMS?</h3><div class="decision-callout"><strong>Decision (May 6, Brian):</strong> If a citizen has STOP'd from SMS and a transfer document later hits their parcel, they have effectively self-removed from the program. Cuyahoga will document this as the citizen's responsibility in their county-side procedures. The order processes normally — no Neumo system intervention required.</div><p>This simplifies Phase 1 substantially. Brian explicitly took ownership of writing this rule into Cuyahoga's user-facing program documentation.</p></div></div>
+    <div class="step"><div class="step-num">08</div><div class="step-body"><div class="actor">Phase 2 preview</div><h3>Renewal</h3><p>Phase 1 does not include automated renewal reminders or self-service renewal. Phase 2 will add:</p><ul><li>Email reminder approximately 2 weeks before claim expires</li><li>One-click renewal (no re-enrollment needed since nothing has changed — same owner, same property, same mobile)</li></ul><p>We have a 12-month runway from Phase 1 launch to deliver Phase 2 renewal — the first claim doesn't expire until then.</p></div></div>
+  </section>
+
+  <section class="view" data-pane="clerk">
+    <div class="view-header">
+      <h2>The records clerk's journey</h2>
+      <p class="lede">Clerks own counter enrollment and order processing. They never act as the 2FA channel. <strong>Clerks cannot override the lock</strong> — that authority belongs to the supervisor only.</p>
+    </div>
+    <div class="step"><div class="step-num">01</div><div class="step-body"><div class="actor">Clerk → Citizen</div><h3>Verify identity at the counter</h3><p>Clerk follows Cuyahoga's existing identity-verification procedures.</p><ul><li><strong>Driver's license numbers must NOT be stored</strong> — verify and discard</li></ul></div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body"><div class="actor">Clerk → Cloud Records UI</div><h3>Register the claim through the enrollment framework</h3><p>Clerk opens the enrollment screen and enters the citizen's details. The framework writes the citizen → program association.</p><div class="clerk-screen"><div class="clerk-screen-bar"><span>Cloud Records · Enrollment Framework — Deed Lock</span><span>Clerk: M. Kozlowski · #4471</span></div><div class="clerk-screen-body"><div class="clerk-field"><span class="clerk-field-label">Claimant Name</span><span class="clerk-field-value">Patricia A. Reyes</span></div><div class="clerk-field"><span class="clerk-field-label">Parcel ID</span><span class="clerk-field-value">542-19-008</span></div><div class="clerk-field"><span class="clerk-field-label">Property</span><span class="clerk-field-value">1247 Elm Ave, Cleveland OH 44102</span></div><div class="clerk-field"><span class="clerk-field-label">Mobile</span><span class="clerk-field-value">(216) 555-0142 — ✓ Verified 10:41 AM</span></div><div class="clerk-field"><span class="clerk-field-label">Program</span><span class="clerk-field-value">Deed Lock</span></div><div class="clerk-field"><span class="clerk-field-label">Effective</span><span class="clerk-field-value">May 6, 2026 — immediate</span></div><div class="clerk-field"><span class="clerk-field-label">Expires</span><span class="clerk-field-value">May 6, 2027 — 12-month claim period</span></div><div class="clerk-actions"><button class="btn-mock primary">Activate Claim</button><button class="btn-mock">Cancel</button></div></div></div></div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body"><div class="actor">Clerk → Order intake (later)</div><h3>Receive a transfer order at recorder intake</h3><p>A new transfer document arrives at recorder intake. Cloud Records auto-checks every parcel ID against the Claimed Property table. <strong>The match check fires at order intake/processing in the recorder's office</strong> — not at auditor handoff.</p></div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body"><div class="actor">Clerk ← UI alert</div><h3>Order is locked — clerk cannot unsuspend</h3><div class="clerk-screen"><div class="clerk-screen-bar"><span>Cloud Records · Order #2026-04-7831</span><span>Status: SUSPENDED — DEED LOCK</span></div><div class="clerk-banner"><strong>⚠ Deed Lock — order held</strong>Parcel 542-19-008 is enrolled. Citizen 2FA alert sent at 2:13 PM. Order cannot be finalized until citizen confirms or supervisor resolves. Clerk cannot unsuspend.</div><div class="clerk-screen-body" style="padding-top: 6px;"><div class="clerk-field"><span class="clerk-field-label">Document Type</span><span class="clerk-field-value">Quitclaim Deed</span></div><div class="clerk-field"><span class="clerk-field-label">Parcel</span><span class="clerk-field-value">542-19-008 🔒 Claimed</span></div><div class="clerk-field"><span class="clerk-field-label">Citizen Alert</span><span class="clerk-field-value">Sent 2:13 PM · Awaiting reply · Expires 24hr</span></div><div class="clerk-actions"><button class="btn-mock disabled">Finalize Recording</button><button class="btn-mock">View Audit Trail</button><button class="btn-mock">Escalate to Supervisor</button></div></div></div></div></div>
+    <div class="step"><div class="step-num">05</div><div class="step-body"><div class="actor">Clerk → finalize OR hand off</div><h3>Resolution path depends on the citizen's reply</h3><ul><li><strong>CONFIRM received</strong> → order unlocks, clerk gets UI notification, proceeds to finalize</li><li><strong>DISPUTE received</strong> → order disappears from clerk's queue, clerk notified why</li><li><strong>3 attempts / 24-hr timeout</strong> → moves to supervisor queue automatically</li></ul></div></div>
+  </section>
+
+  <section class="view" data-pane="supervisor">
+    <div class="view-header">
+      <h2>The supervisor's journey</h2>
+      <p class="lede">Supervisors own a queue of orders the automated flow cannot resolve. They are the only role with manual override authority.</p>
+    </div>
+    <div class="step"><div class="step-num">01</div><div class="step-body"><div class="actor">Supervisor ← System</div><h3>Queue receives escalations from three triggers</h3>
+      <div class="queue">
+        <div class="queue-head">Supervisor Queue — Deed Lock Escalations</div>
+        <div class="queue-row header"><span>Order</span><span>Property</span><span>Flag</span><span>Age</span></div>
+        <div class="queue-row"><span class="order">#7831</span><span>1247 Elm Ave · 542-19-008</span><span><span class="flag-pill flag-fraud">Fraud — DISPUTE</span></span><span class="age">12 min</span></div>
+        <div class="queue-row"><span class="order">#7822</span><span>809 Maple Dr · 318-44-219</span><span><span class="flag-pill flag-retries">Max attempts</span></span><span class="age">1 hr 04 min</span></div>
+        <div class="queue-row"><span class="order">#7798</span><span>22 Birch Ln · 271-08-104</span><span><span class="flag-pill flag-nonresp">Non-responsive 24hr</span></span><span class="age">1 day</span></div>
+      </div>
+      <ul><li><strong>Fraud:</strong> citizen replied DISPUTE — handle as suspected deed fraud</li><li><strong>Max attempts:</strong> citizen exceeded 3 attempts — force-locked regardless of last reply</li><li><strong>Non-responsive 24 hr:</strong> reminder sent at 12 hr, escalated at 24 hr</li></ul>
+      <div class="decision-callout" style="margin-top:12px"><strong>Note:</strong> Citizen opt-out (STOP) is no longer a queue trigger — per May 6 decision, that's handled as the citizen's responsibility outside the system.</div>
+    </div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body"><div class="actor">Supervisor → resolution</div><h3>Resolve per county procedures + edge cases</h3><p>Supervisor resolves per Cuyahoga's procedures (written in parallel with build, not before UAT). The supervisor is also the manual override path for all edge cases that can't be programmed:</p><ul><li><strong>Citizen passes away during claim period</strong> — supervisor override only. No executor/POA/spouse logic in code; too many variables. Supervisor evaluates documentation case-by-case.</li><li><strong>Property sells mid-claim</strong></li><li><strong>Grantor present at counter but not grantee</strong></li><li><strong>False positives / legitimate transfers caught by lock</strong></li></ul><div class="decision-callout"><strong>Open item:</strong> Brian O'Malley is writing Cuyahoga's supervisor procedures during the build phase, in parallel with engineering. Not a UAT blocker.</div></div></div>
+  </section>
+
+  <section class="view" data-pane="system">
+    <div class="view-header">
+      <h2>System architecture &amp; technical specs</h2>
+      <p class="lede">Four-component split: Spider holds the program registry, Cloud Records owns the enrollment framework + Deed Lock business logic, Platform owns SMS infrastructure, Supervisor queue handles human-in-the-loop. <strong>All OTP parsing logic lives in Records — Platform never inspects message content.</strong></p>
+    </div>
+
+    <div class="framework-section">
+      <div class="label">Architectural foundation</div>
+      <h3>Enrollment Framework — built once, hosts many programs</h3>
+      <p>The same upfront construct is needed for Deed Lock, Protected Individuals (Summit County), Safe at Home, and other future programs. Building it once means future programs are configuration + program-specific rules, not new builds.</p>
+      <p style="font-weight: 600; margin-top: 12px; color: var(--ink);">Two parts:</p>
+      <ul>
+        <li><strong>Spider — Program Registry.</strong> Holds the source list of available programs and which tenants are enabled for which. Per Andy: Q2 path; Q3+ has a different config approach coming.</li>
+        <li><strong>Cloud Records — Citizen Enrollment &amp; Program Association.</strong> UI for clerks to register a citizen, capture mobile (verified via Platform React component), associate to one or more enabled programs.</li>
+      </ul>
+      <p style="font-weight: 600; margin-top: 14px; color: var(--ink);">Data the framework owns (program-agnostic):</p>
+      <ul>
+        <li>Citizen identity (name, no DLN, audit fields)</li>
+        <li>Verified mobile number (AWS opt-in handshake completed)</li>
+        <li>Program associations (one citizen → many programs)</li>
+        <li>Enrollment date + expiry date per association</li>
+        <li>Registering clerk audit trail</li>
+      </ul>
+    </div>
+
+    <h3 class="section-title">Component architecture</h3>
+    <div class="arch-grid">
+      <div class="arch-card"><div class="owner">Owner: Andy Majda + CR team</div><h4>Spider — Program Registry</h4><div class="role">Q2 path; Q3+ replacement coming</div><ul><li>Source list of programs</li><li>Per-tenant enablement</li><li>Toggleable program-on-tenant interface</li></ul></div>
+      <div class="arch-card"><div class="owner">Owner: Shawn Beeson</div><h4>Cloud Records</h4><div class="role">Enrollment framework + Deed Lock logic</div><ul><li>Citizen enrollment UI</li><li>Citizen → program association table</li><li>Parcel ID matching at recorder intake</li><li><strong>Order suspend via extended suspend mechanism</strong> (with elevated permissioning) — Andy investigating</li><li>OTP generation, invalidation, rotation</li><li>Last-reply-wins logic with 3-attempt max</li><li>12-hr / 24-hr timeout management</li><li>12-month claim expiry job (scheduled)</li><li>Supervisor queue routing</li></ul></div>
+      <div class="arch-card"><div class="owner">Owner: Joe Balfantz · Eng: David Barboza</div><h4>AWS End User Messaging</h4><div class="role">SMS send &amp; receive</div><ul><li>Outbound SMS via PinpointSMSVoiceV2 — <strong>branded as Cuyahoga County</strong></li><li>10DLC originating identity (~6 wk activation)</li><li>STOP / opt-out handling (AWS default)</li><li><strong>Inbound reply pass-through (NEW BUILD — Joe writing ticket)</strong></li><li>Pre-built React mobile verification component</li></ul></div>
+      <div class="arch-card"><div class="owner">Owner: Cuyahoga ops + CR UI</div><h4>Supervisor Queue</h4><div class="role">Human-in-the-loop resolution</div><ul><li>Receives DISPUTE escalations</li><li>Receives max-attempts escalations</li><li>Receives 24-hr non-response escalations</li><li>Manual unlock authority (audit-trailed)</li><li>Resolution procedures written in parallel with build</li></ul></div>
+    </div>
+
+    <h3 class="section-title">Data model — Claimed Property table</h3>
+    <table class="data">
+      <thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>parcel_id</td><td><span class="badge in">Required</span></td><td>Matched at recorder intake/order processing</td></tr>
+        <tr><td>claimant_name</td><td><span class="badge in">Required</span></td><td>As shown on government-issued ID</td></tr>
+        <tr><td>mobile_phone</td><td><span class="badge in">Required</span></td><td>Verified at enrollment via Platform React component</td></tr>
+        <tr><td>enrollment_date</td><td><span class="badge in">Required</span></td><td>Drives expiry calculation</td></tr>
+        <tr><td>expiry_date</td><td><span class="badge in">Required</span></td><td>12 months from enrollment; scheduled job clears expired claims</td></tr>
+        <tr><td>program_id</td><td><span class="badge in">Required</span></td><td>Foreign key to Spider program registry</td></tr>
+        <tr><td>registering_clerk_id</td><td><span class="badge in">Required</span></td><td>Audit trail</td></tr>
+        <tr><td>property_address</td><td><span class="badge in">Required</span></td><td>Display only — used in SMS body</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px; color: var(--danger); font-weight:600; margin: 6px 0 24px;">⚠ Driver's license numbers must NOT be stored.</p>
+
+    <h3 class="section-title">Platform capability readiness</h3>
+    <table class="data">
+      <thead><tr><th>Capability</th><th>Status</th><th>Jira</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Outbound SMS send</td><td><span class="status-pill done">Done</span></td><td><span class="ticket-link">Shipped</span></td><td>Cuyahoga branding configured at sender ID level</td></tr>
+        <tr><td>STOP / opt-out handling</td><td><span class="status-pill done">Done</span></td><td><span class="ticket-link">PLAT-7556, PLAT-8404</span></td><td>Opt-out is citizen's responsibility per May 6 decision</td></tr>
+        <tr><td>Mobile verification React component</td><td><span class="status-pill exists">Exists</span></td><td>—</td><td>Shawn embeds component (not raw APIs)</td></tr>
+        <tr><td>Delivery receipts</td><td><span class="status-pill dev">In Dev</span></td><td><span class="ticket-link">PLAT-8405</span></td><td>Not Phase 1 blocker</td></tr>
+        <tr><td><strong>Inbound reply pass-through</strong></td><td><span class="status-pill new">New build</span></td><td><span class="ticket-link" style="color: var(--danger);">Joe to write ticket</span></td><td>Confirmed Apr 29 as the one platform feature this requires</td></tr>
+        <tr><td>10DLC provisioning</td><td><span class="status-pill decision">Decision</span></td><td><span class="ticket-link" style="color: var(--danger);">No ticket</span></td><td>10DLC over short code. ~6 wk activation</td></tr>
+        <tr><td>Custom keyword passthrough</td><td><span class="status-pill new">New build</span></td><td><span class="ticket-link" style="color: var(--danger);">No ticket</span></td><td>AWS must not consume CONFIRM/DISPUTE</td></tr>
+        <tr><td><strong>AWS Sandbox testing constraint</strong></td><td><span class="status-pill risk">Risk</span></td><td>—</td><td><strong>1 test text per number per 30 days.</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="open-items">
+      <h3>Open items blocking Phase 1</h3>
+      <ol>
+        <li><strong>Reframe enrollment framework architecture</strong> — formalize Spider + CR enrollment split <span class="owner">Shawn / Andy · architecture phase</span></li>
+        <li><strong>Investigate extended-suspend vs. new lock type</strong> <span class="owner">Andy · architecture phase</span></li>
+        <li><strong>Initiate 10DLC provisioning</strong> <span class="owner">Joe / Platform · this week</span></li>
+        <li><strong>Confirm parcel ID format</strong> consistent across all order types in CR <span class="owner">Shawn · before build</span></li>
+        <li><strong>Joe writes Platform pass-through ticket</strong> <span class="owner">Joe · this sprint</span></li>
+        <li><strong>SMS testing strategy</strong> — pool of test devices given AWS Sandbox limit <span class="owner">Edgar / Joe / Andy · before build</span></li>
+        <li><strong>Scheduled expiry job</strong> — design job to expire stale claims after 12 months <span class="owner">Andy · architecture phase</span></li>
+        <li><strong>Brian writes Cuyahoga supervisor procedures</strong> in parallel with build <span class="owner">Brian · before UAT</span></li>
+        <li><strong>Mandy + Tamara use-case + testing rigor session</strong> <span class="owner">Mandy / Tamara · next week</span></li>
+      </ol>
+    </div>
+
+    <h3 class="section-title">Out of scope — Phase 1</h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px;">
+      <span class="badge out">Online or self-service enrollment</span>
+      <span class="badge out">Digital ID verification</span>
+      <span class="badge out">Commercial / LLC property</span>
+      <span class="badge out">Automated unlock without citizen action</span>
+      <span class="badge out">PIN-based unlock</span>
+      <span class="badge out">Email expiry reminders / renewal flow (Phase 2)</span>
+      <span class="badge out">Self-service phone update (Phase 2)</span>
+      <span class="badge out">LLM fraud pattern detection (future)</span>
+    </div>
+  </section>
+
+  <section class="view" data-pane="questions">
+    <div class="view-header">
+      <h2>Open questions from engineering review</h2>
+      <p class="lede">Surfaced in the April 29 engineering review with Shawn, Joe, Andy, Edgar, and Tamara. Each needs an answer before or during build.</p>
+    </div>
+
+    <div class="question-group">
+      <h3>Resolved May 6</h3>
+      <table class="data questions">
+        <thead><tr><th>#</th><th>Question</th><th>Resolution</th></tr></thead>
+        <tbody>
+          <tr><td>4</td><td>Is Cuyahoga combined recorder/auditor? Where does parcel-match trigger fire?</td><td><span class="status-pill resolved">Resolved</span> Combined office, but parcel-match fires at recorder intake / order processing.</td></tr>
+          <tr><td>12</td><td>"Supervisor" vs. "administrator" vocabulary</td><td><span class="status-pill resolved">Resolved</span> Brian uses "supervisor" — aligning to that term.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-group">
+      <h3>Architecture &amp; data model — still open</h3>
+      <table class="data questions">
+        <thead><tr><th>#</th><th>Question</th><th>Owner</th><th>Needed by</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Can existing CR <code>suspend</code> be extended with elevated permissioning, or do we need a new lock type?</td><td>Andy Majda</td><td>Architecture phase</td></tr>
+          <tr><td>2</td><td>Is a locked order searchable in Cloud Search / kiosk while suspended, or hidden?</td><td>Edgar / Mandy</td><td>Before build</td></tr>
+          <tr><td>3</td><td>What's the cascade when a property sells mid-claim? Is there a CR signal the framework can subscribe to?</td><td>Shawn</td><td>Before build</td></tr>
+          <tr><td>5</td><td>What does "lock" actually look like data-model-wise vs. existing suspend semantics?</td><td>Andy / Shawn</td><td>Architecture phase</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-group">
+      <h3>Edge cases &amp; unhappy paths</h3>
+      <table class="data questions">
+        <thead><tr><th>#</th><th>Scenario</th><th>Question</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>6</td><td>Citizen changes phone number after enrollment</td><td>How is the new number captured? Self-service in Phase 2 or counter-only re-enrollment for Phase 1?</td><td>Mandy / Tamara</td></tr>
+          <tr><td>8</td><td>Citizen passes away during claim period</td><td>What documentation does supervisor require to clear the claim?</td><td>Brian (procedures)</td></tr>
+          <tr><td>9</td><td>Grantor present at counter but not grantee</td><td>How does the lock interact with normal seller-side workflow?</td><td>Tamara / Cuyahoga</td></tr>
+          <tr><td>10</td><td>False positive locks (legitimate transfers caught)</td><td>What's the friction-reduction path?</td><td>Andy / Mandy</td></tr>
+          <tr><td>11</td><td>Force-lock from max attempts on a legitimate transfer</td><td>How does supervisor validate citizen's actual intent?</td><td>Mandy / Tamara</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-group">
+      <h3>Roles, permissioning, ops &amp; testing</h3>
+      <table class="data questions">
+        <thead><tr><th>#</th><th>Question</th><th>Owner</th></tr></thead>
+        <tbody>
+          <tr><td>13</td><td>Can supervisor override be self-service in the UI, or does it require a Neumo support ticket?</td><td>Andy / Shawn</td></tr>
+          <tr><td>14</td><td>AWS Sandbox 1-text-per-30-days limit — how do we pool test devices?</td><td>Edgar / Joe</td></tr>
+          <tr><td>15</td><td>Rigorous testing plan covering all unhappy paths</td><td>Tamara</td></tr>
+          <tr><td>16</td><td>Production support runbook for "stuck" orders</td><td>Shawn / Tamara</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="process-note">
+      <strong>Process note from April 29:</strong> Andy and Shawn aligned that architecture decisions belong at the JPD level, before stories are written. Sprint stories will be written after Mandy + Tamara's use-case session.
+    </div>
+  </section>
+
+  <section class="view" data-pane="sidenotes">
+    <div class="view-header">
+      <h2>Sidenotes — strategic / adjacent items</h2>
+      <p class="lede">Items surfaced in the May 6 Cuyahoga touchpoint that are NOT Phase 1 requirements but matter for product strategy, partnership, or future planning. Captured here so they don't get lost.</p>
+    </div>
+
+    <div class="sidenote-card">
+      <div class="label">Sidenote · API integration opportunity</div>
+      <h3>Cuyahoga MyPlace integration via Neumo API</h3>
+      <p>Brian's web team will add a lock indicator (he said "a little lock emoji") on Cuyahoga's MyPlace site — their public GIS / parcel lookup tool — so title examiners can see that a property is enrolled in Deed Lock and instruct the seller to log in and disable it before transfer.</p>
+      <p>This is a Cuyahoga-side build, not Neumo's. But it's an opportunity to use our API to better integrate with their GIS — Cuyahoga's web team would consume claim-status data through our public claim-status endpoint rather than building duplicate state. Worth surfacing the API capability to Brian's team when we're closer to build.</p>
+      <div class="owner-line"><strong>Owner:</strong> Mandy to circulate the API capability to Brian's web team during integration phase.</div>
+    </div>
+
+    <div class="sidenote-card" style="border-left-color: var(--ok);">
+      <div class="label" style="color: var(--ok);">Growth opportunity · Sourced from May 6 (Brian + Dave Weaver)</div>
+      <h3>Subscription-service expansion via auditor channel</h3>
+      <p>Brian explicitly positioned Deed Lock as a productized subscription service ("$50/year per parcel, county keeps some, you keep some, link it to any parcel database") and noted that <strong>recorders in Ohio lack legal authority to reject transfers — that authority sits with auditor offices.</strong> This makes auditor offices the strategic expansion target for Deed Lock.</p>
+      <p>Brian is fielding inbound from Arizona and Tennessee on deed-fraud prevention; he reports these states have nothing equivalent in place. Dave Weaver volunteered to leverage his wife's auditor connections to drive adoption. Cuyahoga is positioned to be a national reference customer.</p>
+      <p style="font-weight: 600; color: var(--ink); margin-top: 10px;">Implications:</p>
+      <ul>
+        <li>Phase 2 / 3 GTM is potentially product-led growth via auditor channels, not purely recorder sales</li>
+        <li>Pricing model (per-parcel subscription) is materially different from current Records Suite licensing</li>
+        <li>Cuyahoga + Brian are willing reference partners for outbound — he's already taking calls from other states</li>
+      </ul>
+      <div class="owner-line"><strong>Owner:</strong> Mandy to flag to Sarah Ratcliffe and Joy Johnson for product-led growth strategy conversation. Not Phase 1 scope; capture for 2026 H2 / 2027 planning.</div>
+    </div>
+
+    <div class="sidenote-card">
+      <div class="label">Sidenote · AI Indexing pilot opportunity</div>
+      <h3>Cuyahoga as potential second AI Indexing pilot</h3>
+      <p>Brian asked about AI indexing maturity and timing. When told end-of-May POC pilot launch, he immediately did the contract math — current Cuyahoga contract through 2027, current contract bifurcates cloud services and manual indexing, manual indexing line item could be replaced with AI indexing on renewal at lower cost.</p>
+      <p style="font-weight: 600; color: var(--ink); margin-top: 10px;">Implications:</p>
+      <ul>
+        <li>Cuyahoga is a willing second pilot for AI Indexing alongside Beaufort SC</li>
+        <li>Contract renewal in 2027 is a natural inflection for AI Indexing economics conversation</li>
+      </ul>
+      <div class="owner-line"><strong>Owner:</strong> Mandy to flag to Joy Johnson + Sarah Ratcliffe; coordinate with AI Indexing POC team (Shawn, Patty Buford).</div>
+    </div>
+
+    <div class="sidenote-card">
+      <div class="label">Relationship asset</div>
+      <h3>Brian as ongoing intel partner</h3>
+      <p>Brian agreed to monthly intel calls with Mandy ("tell me what's going on in the space") on Ohio gov-tech direction, deed fraud prevention competitive landscape, and inbound from other states. <strong>This is a strategic asset, not a meeting cadence.</strong></p>
+      <div class="owner-line"><strong>Owner:</strong> Mandy to set up recurring monthly cadence; capture themes for product strategy.</div>
+    </div>
+
+    <div class="sidenote-card" style="border-left-color: var(--warn);">
+      <div class="label" style="color: var(--warn);">High-leverage · May 12</div>
+      <h3>Don + Colin financial management session</h3>
+      <p>Brian's "the biggest [issue] is financial mistakes — Don spends half his day fixing them" comment opened a direct path into the Class 1 financial bugs that dominate the CR bug analysis (46% payment/financial). Mandy committed to a show-and-tell session with Don and Colin on Monday May 12 to walk through their financial pain points firsthand.</p>
+      <p style="font-weight: 600; color: var(--ink);">This is the highest-leverage 30 minutes on the Cuyahoga calendar this month.</p>
+      <div class="owner-line"><strong>Owner:</strong> Mandy + Tamara — feed findings into Records Suite financial overhaul work.</div>
+    </div>
+
+  </section>
+
+  <div class="footer-note">
+    <span>Deed Lock · Phase 1 · Cuyahoga County · v4 (post May 6 touchpoint)</span>
+    <span>Neumo · Internal · Confidential</span>
+  </div>
+
+</div>
+
+<script>
+  const tabs = document.querySelectorAll('.tab');
+  const views = document.querySelectorAll('.view');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.view;
+      tabs.forEach(t => t.classList.remove('active'));
+      views.forEach(v => v.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelector(`.view[data-pane="${target}"]`).classList.add('active');
+      window.scrollTo({ top: document.querySelector('.tabs').offsetTop - 8, behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
